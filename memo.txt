@@ -1,0 +1,334 @@
+1. AGV_bringup.launch
+  시리얼통신, 키보드컨트롤, 로봇디스크립션, 조인트스테이트퍼블리셔, 로봇스테이트퍼블리셔, 라이다 실행 순
+
+2. AGV_slam.launch
+  gmapping , rviz 실행
+
+3. 브링업 라이다 실행부에서 퍼블리시 하는 정보 파악
+
+4. gmapping이 라이다를 어떻게 읽어오는지 파악
+
+5. 점찍는 매커니즘 파악
+
+
+AGV_bringup >> /rplidarNode 활성화
+AGV_slam >> /rplidarNode 에서 /scan 토픽을  /slam_gmapping 으로 전달
+	/slam_gmapping에서 /map, /tf publish
+이후에 맵 기반 네비게이션이 진행?
+그렇다면 네비게이션 알고리즘에 간섭 해야함.
+
+
+/scan은 빨간점 집합, /map은 scan기반 정적 맵 데이터 이미지(OccupancyGrid)
+존재하던 장애물이 사라질 때(RP가 사라질 때) BP역시 사라지는지 확인해보기
+
+
+/map  >>  gmapping pkg  >>  openslam_gmapping pkg & nav_msgs pkg 
+-------------------------------------------------------------------------------------------------
+08-04
+장애물 추가 method
+
+1. map update와 병행
+/map 데이터를 기반으로 네비게이션을 수행한다 가정.
+>> /map grid cell에 CCTV layer의 좌표에 해당하는 grid 값을 1로 수정 -- grid 값을 부여하는 소스코드 찾기
+>> 기본적으로 저장/출력되는 맵은 정적 맵이므로 사용이 불가능
+>> map이 업데이트 될때를 노려야함. -- 존재하던 장애물의 부재 구현이 가능한지 확인하기
+>> 업데이트 주기에 맞춰서 갱신 
+
+2.국부 맵 반영시
+맵을 수정할 수 없다면 네비게이션 과정에서 전역 맵을 로드하고, 실시간 라이다 국부 맵을 반영하는 과정에
+가상 장애물을 추가하는 방식으로 고려됨. 
+
+3.occupancygrid map에 그 순간의 장애물 추가 >> 맵 갱신
+다음 순간에 장애물 위치 수정 >> 맵 갱신 과정을 반복
+----------------------------------------------------------------------------------------
+08-05
+
+맵 업데이트 테스트 결과 - 기존 장애물이 사라져도 map 상에서 자동적으로 사라지지 않음.
+/scan과 /tf를 기반으로 mapsaver 실행시 지도 파일 출력이 가능
+점유확률(occ)이 점유 한계치(occ_thresh_) 초과시 점유영역 지정(BlackPoint) , line 253 occ_thresh_ = 0.25
+
+
+gmapping flow
+{
+ gmapping[slam_gmapping] 
+ > main.cpp[startLiveSlam] 
+  > slam_gmapping.cpp[startLiveSlam]
+   > slamgmapping::startLiveSlam[tf::MessageFilter->RegisterCallback ] 
+    > slamgmapping::laserCallBack
+     > slamgmapping::initMapper 
+     > Gmapping::Orientedpoint [openslam_gmapping] > initMapper
+     > Gmapping::RangeSensor > initMapper
+     > Gmapping::SensorMap > initMapper
+     > GridSlamProcessor::init [openslam_gmapping - gridslamprocessor.cpp] >initMapper
+    > laserCallBack으로 돌아옴. got_first_scan을 true로. 
+    > slamgmapping::addscan > laserCallBack
+    > line 641 map to odom transform 행렬및 역행렬을 구함.
+     > slamgmapping::updateMap line 729 - computeActiveArea     
+     > ScanMatcher::computeActiveArea [openslam_gmapping]
+    > exit updateMap
+   > exit laserCallBack
+   > registerCallBack
+  > slamgmapping::publishLoop
+ > ros spin
+}
+
+line 760 정수형 좌표 p(x,y) 선언
+line 761 실수형 점유확률 occ = smap.cell(p)
+  occ = 점유확률 = (255 - color_avg)/255
+  color_avg = (셀 gray scale 값)/(0xFFFFFF * 255)
+  line 507 GMapping::SensorMap형으로 smap 선언
+  openslam sensor.h에서 std::map<std::string,Sensor*> 을 SensorMap형으로 typedef
+  map 클래스는 인자로 key, value를 받음.
+  line 508 smap.insert(make_pair(gsp_laser_->getName(), gsp_laser_));
+  map.insert(std::pair<st줌d::string, int>("1", 2)) >>> 문자형과 정수형 쌍으로 지정
+  make_pair 는 두 객체를 하나의 객체로 취급하도록 묶어
+/map 토픽 발행처 >> slamgmapping::updateMap에서 sst_.publish(map_.map)
+line 763~771 점유, 자유, 미지 영역 구분작업
+
+----------------------------------------------------------------------------------------------
+
+08-10
+          기기           최초 보드레이트     USB번호    시리얼 설정 보드레이트
+ch341-uart : Arduino        9600             0                57600
+cp210x : Lidar            115200             1                112000
+
+누크의 정격 입력 : 19V 4.7A
+배터리 출력 : 19V 3.5A
+전력부족? 
+
+gmapping 패키지의 slam_gmapping.cpp 에서 line 760번대에서 점유확률을 구하고 조건문으로 맵에 write할 값 설정
+
+occ < 0  :  -1  
+  - 미지영역(판단 불가 영역, map 상의 회색 영역)
+occ > occ_thresh  :  100   // occ_thresh는 0.25로 선언됨
+  - 점유영역(장애물 존재 영역, map 상의 검은 영역)
+
+0 <= occ <= occ_thresh  :  0
+  - 자유영역(이동 가능 영역, map 상의 하얀 영역)
+
+
+map_.map.data[MAP_IDX(map_.map.info.width, x, y)] = -1 or 100 or 0 
+>> map data를 write하는 구문
+
+이후 map_.map을 sst_로 publish, map_.map.info를 sstm_으로 publish
+sst_ 는 점유격자맵, sstm_ 는 mapmetadata를 담고 있음.
+
+
+
+inital x=0,y=0       
+       x
+       |
+   ㅣ------------width---------------ㅣ
+   ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ
+y--ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ
+   ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ
+
+MAP_IDX = width * y + x
+
+>>  좌상단에서 우하단으로 넘버링
+
+## 네비게이션에 사용되는 맵은 완성된 전역지도의 pgm과 yaml로 사용됨.
+
+
+---------------------------------------------------------------------------------------------
+08-11
+
+gmpping, openslamgmpping - 전역지도 작성단계, 확정된 점유영역 갱신 어려움
+navigation stack(costmap_2D) - 소요시간 및 충돌확률 기반 경로 탐색
+
+gmapping 사용시 제약조건
+- 전역지도의 수정 및 navigation stack으로의 실시간 갱신이 가능해야 함.(+Rviz)
+- 전역지도의 re-loading 및 re-pathplanning 소요시간이 너무 길면 안됨.
+costmap 사용시 제약조건
+- 국부 탐색영역 밖에서도(전역적으로) costmap 갱신이 가능해야 함.
+
+costmap test를 위한 선행 작업
+> 전역지도 작성 - 라이다 반전 문제
+> navigation stack 구성 - lino robot 기반 작성됨
+
+# NUC에서 bringup 실행시 라이다가 돌지않고 requesting topic 단계에서 멈출 때
+ > 아두이노, 라이다 분리 후 아두이노, 라이다 순으로 연결 (라이다의 포트번호를 1번으로 설정함으로 인한 문제)
+
+# 라이다 반전 문제
+ > 기존에 존재하던 문제인가?
+ > AGV자체의 초기 포지션을 변경해보면 어떨까
+
+씨발 모터아작 아그작작 
+
+----------------------------------------------------------------------------------------------
+08-16
+
+obstacle_range = 센서로 읽어올 장애물의 최대거리
+raytrace_range = 이게 뭐지 
+inflation_radius = 장애물 기준 해당 반경 만큼의 영역을 제외한 나머지 영역에 동일한 cost 부여
+		즉, 장애물 주변 충돌 가능성 cost가 존재하는 영역 반경
+publish_frequency = costmap의 시각화정보 publish rate
+
+
+costmap_2d::Costmap2DROS >> 전역지도에 대하여 센서정보를 기반으로 국부적인 map update를 수행.
+
+## global configuration 설정에서 static_map boolean으로 실시간 전역지도(점유격자맵)를 사용할 수도 있음.
+ > but, 점유영역의 자유영역화가 가능해야 점유격자맵을 네비게이션에 사용가능.
+
+------------------------------------------------------------------------------------------------
+08-17
+
+네비게이션 스택
+1. 라이다, tf, 오도메트리 등 (AGV_bringup.launch)
+2. common configuration, global configuration, local configuration
+ > common : obstacle_range, raytrace_range, inflation_radius 등
+  > obstacle_range : 국부 장애물 구현에 사용될 라이다 센서의 거리 최대값
+  > raytrace_range : ??
+  > *footprint : polygon 형상 로봇 치수관련
+  > *robot_radius : 원형 로봇 반경 치수
+  > inflation_radius : 장애물과 해당 거리만큼 떨어져 있는 모든 경로에 대해 동일한 cost 부여
+  > transform_tolerance : 최대 tf 지연 허용값, 기본은 없음.
+  > observation_source : 소스 센서 토픽명
+  > map_type : costmap or voxel
+ > global : update_rate, static_map 여부 등
+  > *robot_base_frame : base_link or base_footprint 중 골라야 하는 것으로 보임.
+  > staticmap : true
+ > local : update_rate, publish_freq 등
+  > publish_frequency : costmap 시각정보 publish 주기 설정
+  > rolling_window : costmap을 로봇 중심으로 유지 #true시 local costmap, false시 global costmap
+  > staticmap : default false(rolling window와 반대로 지정)
+3. base_local_planner : 로봇 제한속도 및 제한가속도 설정
+4. move_base.launch 
+ > map_server args에 전역지도 파일 경로 지정. 아래 두 가지중 하나
+  > args="$(find package)/*.pgm resolution"
+  > map_file arg 활성화 후 args="$(arg map_file)"
+5. amcl 관련.
+
+common_costmap_params.yaml에 AGV프레임의 반경 설정해줘야 함.
+robot_base_frame 지정해줘야 함.
+base_local_planner - trajectory planner와 DWA planner 두 종류.
+> 낮은 가속도 환경에서 DWA가 Trajectory rollout 보다 우세함.
+
+yaml파일의 파라미터는 costmap_2d_ros.cpp의 line 202 loadOldParameters에서 static, obstacle, inflation
+layer 설정하면서 읽어들임.
+line 213 static_map=true일 경우 static layer 생성
+line 227 map_type=voxel인 경우, voxel layer 생성
+line 242 map_type=costmap인 경우 obstacle layer 생성
+line 263 inflation layer 생성
+plugins 폴더에 각 레이어별 cpp파일 존재.
+
+
+costmap의 cost는 gray scale로 표현됨. 처리과정에서 백분율로 변환
+cost = 0 : 자유영역
+cost = 1~127 : 충돌가능성 낮은 영역
+cost = 128~252 : 충돌가능성 높은 영역
+cost = 253~254 : 충돌영역
+cost = 255 : 점유영역
+
+
+
+costmap_2d_ros는 costmap_2d를 ROS로 Wrapping한 것. >> costmap_2d에서 업데이트가 이루어지나?
+costmap_2d_publisher.cpp의 costmap_pub_과 costmap_update_pub_에서 gray scale(0~255) costmap을
+ OccupancyGridMap(0~100)으로 변환하여 publish
+
+소스코드 내부에서 costmap_ 이름으로 돌아다님. marking 작업은 배열의 인덱스로 접근하여 셀의 cost 입력.
+
+
+[amcl.cpp]
+convertMap 객체에 점유격자맵 변환
+handleMapMessage 객체에서 map_=convertMap(msg)로 변환맵 받아옴.
+자유영역 인덱싱, particle filter생성
+mapReceived 객체에서 handleMapMessage(*msg)로 받아옴.
+AmclNode 객체에서 mapReceived 객체를 사용해 반환된 맵으로부터 맵토픽 subscribed 출력, map_sub_에 저장.
+노드핸들러의 subscribe 인수로 map_sub_를 받음.
+
+
+
+rolling window = true일때, local map에서만 update가 수행되면, 정상적인 병합이 어려울 것으로 예상.
+rolling window = false이면?
+
+
+--------------------------------------------------------------------------------------------------
+08-23
+
+costmap_2d::getCharMap() >> return costmap_ 
+소스코드 내 함수원형의 master_grid에는 costmap_를 입력받음. 
+updateBounds는 update할 영역을 지정, 실질적 update는 updateCosts에서 
+
+라이다 아두이노 포트 문제 : usb포트 두개 중 아래, 위 순으로 우선 넘버링 부여됨,
+ 기존 구조(위-아두이노, 아래-라이다)를 (위-라이다(1), 아래-아두이노(0))로 변경
+
+
+[costmap_2d_ros.cpp]
+line 202 loadOldParameters에서 static, obstacle, inflation layer 초기화 및 파라미터 획득.
+line 213 static_map=true일 경우 static layer 생성
+line 227 map_type=voxel인 경우, voxel layer 생성
+line 242 map_type=costmap인 경우 obstacle layer 생성
+line 263 inflation layer 생성
+
+
+[obstacle_layer.cpp]
+line 377 신규 장애물이 로봇으로부터 너무 높이, 또는 멀리 있는 경우 장애물로 추가되지 않음. 
+ObstacleLayer::updateBounds
+line 403 unsigned int index = getIndex(mx, my);   # 장애물의 맵좌표 인덱스
+line 404 costmap_[index] = LETHAL_OBSTACLE;    # costmap의 인덱스 위치에 cost할당
+line 405 touch(px, py, min_x, min_y, max_x, max_y);   #??
+
+>> obstacle layer에서 letahl obstacle만을 지정,
+
+
+[layered_costmap.cpp]
+costmap_객체의 update수행
+
+
+[costmap_2d.cpp]
+line 197 setCost >> costmap_[getIndex(mx, my)] = cost;
+
+
+
+-----[layered costmap]------
+1. sensor data로 부터 obstacle layer의 변화를 감지. updateBounds method로 bounding box 특정
+2. bounding box 영역 내 cost clear 작업
+3. clear된 영역에 static layer, 바뀐 obstacle layer, inflation layer순으로 병합하여 matster costmap 생성
+
+
+할 일
+>> setCost와 updateCosts의 cost 할당방식 비교.
+>> test layer 생성
+>> navigation parameter 수정 후 AGV돌려보기
+>> 새 layer의 기존 layer와의 병합 
+>> rviz상에서 costmap 시각화
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
