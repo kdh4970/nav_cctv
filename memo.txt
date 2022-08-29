@@ -287,13 +287,20 @@ line 197 setCost >> costmap_[getIndex(mx, my)] = cost;
 3. bounding box 영역에 static, 바뀐 obstacle, inflation layer순으로 병합하여 matster costmap 생성
 
 
+
+------------------------------------------------------------------------------------------
+08-29
+
+navigation stack prototype 작성
+> costmap의 rviz 시각화 
+> rolling window, inflation radius 등 parameter test 및 AGV에 호환되도록 수정.
+
+
+
 할 일
 >> setCost와 updateCosts의 cost 할당방식 비교.
 >> test layer 생성
->> navigation parameter 수정 후 AGV돌려보기
 >> test layer의 기존 layer와의 병합 
->> rviz상에서 layered costmap 시각화
-
 
 
 
