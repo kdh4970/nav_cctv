@@ -1,21 +1,23 @@
 <launch>
   <master auto="start"/>
-  <!-- Run the map server --> 
-  <!--<arg name="map_file" default="$(find practice)/config/map/map.yaml"/>-->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find practice)/config/map/map.pgm" />
+  
+  <!-- Map Server --> 
+  <!--<arg name="map_file" default="$(find practice)/config/map/map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find practice)/config/map/map.pgm" /></node>-->
+  
+  <!-- AMCL --> 
+  <include file="$(find practice)/launch/include/amcl.launch" />
 
-    <!--- Run AMCL --> 
-    <include file="$(find practice)/launch/include/amcl.launch" />
-
-    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+  <!-- move_base -->>
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find practice)/param/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
     <rosparam file="$(find practice)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find practice)/param/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find practice)/param/global_costmap_params.yaml" command="load" /> 
     <rosparam file="$(find practice)/param/base_local_planner_params.yaml" command="load" />
-
   </node>
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_description)/rviz/navigation.rviz" />
-  </node>
+  <!-- rviz -->
+  <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_description)/rviz/navigation.rviz" />
+  </node>-->
 </launch>
