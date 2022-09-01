@@ -315,6 +315,12 @@ master_costmap
 
 raytrace_range = local update boundary box size
 
+rviz -> 1 grid = 1 meter
+pixel index -> 200 pixel = 10 grid = 10 meter 
+1 meter = 20 pixel
+1 pixel = 0.05 meter
+0.05 = map resolution
+
 해야 할 것
 >> 절대 좌표 마킹
 
