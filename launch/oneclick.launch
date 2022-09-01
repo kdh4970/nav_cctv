@@ -1,0 +1,33 @@
+<launch>
+  <master auto="start"/>
+  
+  <!-- Bringup -->
+  <include file="$(find practice)/launch/AGV_bringup.launch" />
+
+
+  <!-- Navigation stack -->
+
+  <!-- Map Server -->
+  <arg name="map_file" default="$(find nav_cost_test)/map/map.yaml"/>
+  <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
+  
+  <!-- AMCL --> 
+  <include file="$(find practice)/launch/include/amcl.launch" />
+
+  <!-- move_base -->>
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find nav_cost_test)/param/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find nav_cost_test)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find nav_cost_test)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find nav_cost_test)/param/global_costmap_params.yaml" command="load" /> 
+    <rosparam file="$(find nav_cost_test)/param/base_local_planner_params.yaml" command="load" />
+  </node>
+  
+  <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
+    <rosparam file="$(find nav_cost_test)/param/test_grid_params.yaml" command="load" ns="/costmap_node/costmap" />
+  </node>
+
+  <!-- rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find nav_cost_test)/rviz/test_grid.rviz" />
+
+</launch>

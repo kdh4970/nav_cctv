@@ -1,0 +1,60 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/capstone/catkin_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/capstone/catkin_ws/src/navigation/amcl/include/**",
+        "/home/capstone/catkin_ws/src/navigation/base_local_planner/include/**",
+        "/home/capstone/catkin_ws/src/navigation/carrot_planner/include/**",
+        "/home/capstone/catkin_ws/src/navigation/clear_costmap_recovery/include/**",
+        "/home/capstone/catkin_ws/src/doosan-robot/common/include/**",
+        "/home/capstone/catkin_ws/src/navigation/costmap_2d/include/**",
+        "/home/capstone/catkin_ws/src/doosan-robot/dsr_control/include/**",
+        "/home/capstone/catkin_ws/src/navigation/dwa_local_planner/include/**",
+        "/home/capstone/catkin_ws/src/navigation/global_planner/include/**",
+        "/home/capstone/catkin_ws/src/hector_slam/hector_geotiff/include/**",
+        "/home/capstone/catkin_ws/src/hector_slam/hector_map_tools/include/**",
+        "/home/capstone/catkin_ws/src/hector_slam/hector_mapping/include/**",
+        "/home/capstone/catkin_ws/src/hector_slam/hector_marker_drawing/include/**",
+        "/home/capstone/catkin_ws/src/imu_tools/imu_complementary_filter/include/**",
+        "/home/capstone/catkin_ws/src/imu_tools/imu_filter_madgwick/include/**",
+        "/home/capstone/catkin_ws/src/linorobot/include/**",
+        "/home/capstone/catkin_ws/src/navigation/map_server/include/**",
+        "/home/capstone/catkin_ws/src/navigation/move_base/include/**",
+        "/home/capstone/catkin_ws/src/navigation/move_slow_and_clear/include/**",
+        "/home/capstone/catkin_ws/src/navigation/nav_core/include/**",
+        "/home/capstone/catkin_ws/src/nav_cost_test/include/**",
+        "/home/capstone/catkin_ws/src/navigation/navfn/include/**",
+        "/home/capstone/catkin_ws/src/robot_localization/include/**",
+        "/home/capstone/catkin_ws/src/robot_state_publisher/include/**",
+        "/home/capstone/catkin_ws/src/rosserial/rosserial_server/include/**",
+        "/home/capstone/catkin_ws/src/rosserial/rosserial_test/include/**",
+        "/home/capstone/catkin_ws/src/navigation/rotate_recovery/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2_bullet/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2_eigen/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2_geometry_msgs/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2_kdl/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2_msgs/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2_ros/include/**",
+        "/home/capstone/catkin_ws/src/geometry2/tf2_sensor_msgs/include/**",
+        "/home/capstone/catkin_ws/src/turtlebot3_simulations/turtlebot3_fake/include/**",
+        "/home/capstone/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/**",
+        "/home/capstone/catkin_ws/src/turtlebot3/turtlebot3_slam/include/**",
+        "/home/capstone/catkin_ws/src/navigation/voxel_grid/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
