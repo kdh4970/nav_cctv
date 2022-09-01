@@ -299,14 +299,23 @@ navigation stack prototype 작성
 09-01
 
 test용 custom layer 작성 (simple_layer, grid_layer)
->> 상대좌표 마킹, 로봇 좌표 및 방향 기준 전방 1m지점
+>> 로봇 기준 거리 1m 지점의 상대좌표 기반 lethal obstacle marking
+grid layer의 layered costmap 병합 완료.
 
-# custom layer를 단독으로 생성 불가. static layer가 base여서 그런듯.
-# plugin에 static > custom 순으로 하면 정상적으로 출력.
-# lidar sensor data 연동은 plugin에 obstacle layer 추가 후 observation source, scan 추가
+
+현재 layer 구조
+master_costmap 
+ global_costmap
+  static_layer - OGM 기반 static map
+  test_grid_layer - 상대좌표 가상장애물 marking
+  inflation_layer - inflation cost 할당
+ local_costmap
+  obstacle_layer - lidar sensor 기반 장애물 marking $ clearing
+  inflation_layer - inflation cost 할당
+
+raytrace_range = local update boundary box size
 
 해야 할 것
->> layered costmap 연동
 >> 절대 좌표 마킹
 
 
