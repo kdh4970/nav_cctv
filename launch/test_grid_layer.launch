@@ -4,16 +4,16 @@
   <node name="static_tf0" pkg="tf" type="static_transform_publisher" args="2 0 0 0 0 0 /map /base_link 100"/>
 
   <!-- Map Server -->
-  <arg name="map_file" default="$(find nav_cost_test)/map/map.yaml"/>
+  <arg name="map_file" default="$(find nav_cctv)/map/map.yaml"/>
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
   <!-- load yaml -->>
   <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
-    <rosparam file="$(find nav_cost_test)/param/test_grid_params.yaml" command="load" ns="/costmap_node/costmap" />
+    <rosparam file="$(find nav_cctv)/param/test_grid_params.yaml" command="load" ns="/costmap_node/costmap" />
   </node>
 
   
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find nav_cost_test)/rviz/test_grid.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find nav_cctv)/rviz/test_grid.rviz" />
 
 
 </launch>

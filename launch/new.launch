@@ -6,7 +6,7 @@
 
   <!-- Navigation stack -->
   <!-- Map Server -->
-  <arg name="map_file" default="$(find nav_cost_test)/map/map.yaml"/>
+  <arg name="map_file" default="$(find nav_cctv)/map/map.yaml"/>
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
   <!-- AMCL --> 
@@ -14,14 +14,14 @@
 
   <!-- move_base -->>
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find nav_cost_test)/param/new_costmap_common_params.yaml" command="load" ns="global_costmap" /> 
-    <rosparam file="$(find nav_cost_test)/param/new_costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find nav_cost_test)/param/new_local_params.yaml" command="load" />
-    <rosparam file="$(find nav_cost_test)/param/new_global_params.yaml" command="load" /> 
-    <rosparam file="$(find nav_cost_test)/param/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find nav_cctv)/param/new_local_params.yaml" command="load" />
+    <rosparam file="$(find nav_cctv)/param/new_global_params.yaml" command="load" /> 
+    <rosparam file="$(find nav_cctv)/param/base_local_planner_params.yaml" command="load" />
   </node>
 
   <!-- rviz -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find nav_cost_test)/rviz/new.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find nav_cctv)/rviz/new.rviz" />
 
 </launch>

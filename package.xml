@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>nav_cost_test</name>
+  <name>nav_cctv</name>
   <version>0.0.0</version>
-  <description>The nav_cost_test package</description>
+  <description>The nav_cctv package</description>
 
-  <!-- One maintainer tag required, multiple allowed, one person per tag -->
-  <!-- Example:  -->
-  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="capstone@todo.todo">capstone</maintainer>
+  <maintainer email="kdh4970@gmail.com">kdh4970</maintainer>
 
   <license>TODO</license>
 
