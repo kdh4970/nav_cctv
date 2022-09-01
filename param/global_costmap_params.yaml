@@ -6,4 +6,3 @@ global_costmap:
   transform_tolerance: 0.5
   inflation_radius: 0.25 #defalt 0.55
   cost_scaling_factor: 10.0
- 
