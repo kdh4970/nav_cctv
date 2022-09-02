@@ -1,0 +1,2 @@
+uint16 msg_seq
+int16 location
