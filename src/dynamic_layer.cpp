@@ -1,7 +1,12 @@
 #include "simple_layers/dynamic_layer.h"
 #include <pluginlib/class_list_macros.h>
+#include <ros/ros.h>
 #include <ros/console.h>
-#include "conio.h"
+#include "nav_cctv/Locations.h"
+#include "point_subscriber.h"
+
+extern int* Topic_X;
+extern int* msg_seq;
 
 PLUGINLIB_EXPORT_CLASS(simple_layer_namespace::DynamicLayer, costmap_2d::Layer)
 
@@ -46,9 +51,10 @@ void DynamicLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   if (!enabled_)
     return;
 
-  double mark_x = robot_x + 0.5*cos(robot_yaw), mark_y = robot_y + 0.5*sin(robot_yaw);
+  //double mark_x = robot_x + 0.5*cos(robot_yaw), mark_y = robot_y + 0.5*sin(robot_yaw);
   // cos^2 + sin^2 = 1 
-
+  ROS_INFO("Received point is %d, msg_seq is %d",*Topic_X,*msg_seq);
+  double mark_x = *Topic_X, mark_y= 100;
   unsigned int mx;
   unsigned int my;
   if(worldToMap(mark_x, mark_y, mx, my)){

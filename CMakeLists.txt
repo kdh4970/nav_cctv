@@ -16,7 +16,7 @@ generate_messages(DEPENDENCIES std_msgs)
 catkin_package(
   #INCLUDE_DIRS include
   LIBRARIES nav_cctv
-  CATKIN_DEPENDS roscpp std_msgs std_msgs
+  CATKIN_DEPENDS roscpp std_msgs
   DEPENDS system_lib
 )
 
@@ -30,8 +30,10 @@ add_executable(point_publisher src/point_publisher.cpp)
 target_link_libraries(point_publisher ${catkin_LIBRARIES})
 add_dependencies(point_publisher nav_cctv_gencpp)
 
+add_executable(point_subscriber src/point_subscriber.cpp)
+target_link_libraries(point_subscriber ${catkin_LIBRARIES})
+add_dependencies(point_subscriber nav_cctv_gencpp)
+
 add_library(simple_layer src/simple_layer.cpp)
 add_library(grid_layer src/grid_layer.cpp)
 add_library(dynamic_layer src/dynamic_layer.cpp)
-
-

@@ -1,0 +1,8 @@
+<launch>
+  <master auto="start"/>
+ 
+  
+  <node pkg="nav_cctv" name="point_publisher"  type="point_publisher" />
+  <node pkg="nav_cctv" name="point_subscriber"  type="point_subscriber" />
+
+</launch>

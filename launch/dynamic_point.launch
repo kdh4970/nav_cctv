@@ -1,0 +1,31 @@
+<launch>
+  <master auto="start"/>
+  
+  <!-- Point Publisher and Subscriber-->>
+  <node pkg="nav_cctv" name="point_publisher"  type="point_publisher" />
+  <node pkg="nav_cctv" name="point_subscriber"  type="point_subscriber" />
+
+  <!-- Bringup -->
+  <include file="$(find practice)/launch/AGV_bringup.launch" />
+
+  <!-- Navigation stack -->
+  <!-- Map Server -->
+  <arg name="map_file" default="$(find nav_cctv)/map/map.yaml"/>
+  <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
+  
+  <!-- AMCL --> 
+  <include file="$(find practice)/launch/include/amcl.launch" />
+
+  <!-- move_base -->>
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find nav_cctv)/param/new_local_params.yaml" command="load" />
+    <rosparam file="$(find nav_cctv)/param/dynamic_global_params.yaml" command="load" /> 
+    <rosparam file="$(find nav_cctv)/param/base_local_planner_params.yaml" command="load" />
+  </node>
+
+  <!-- rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find nav_cctv)/rviz/new.rviz" />
+
+</launch>

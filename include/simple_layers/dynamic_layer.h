@@ -5,6 +5,8 @@
 #include <costmap_2d/layered_costmap.h>
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
+#include "nav_cctv/Locations.h"
+
 
 namespace simple_layer_namespace
 {
