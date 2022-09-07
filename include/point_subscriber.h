@@ -2,9 +2,15 @@
 #define POINT_SUBSCRIBER_H
 #include "nav_cctv/Locations.h"
 
-int* Topic_X;
-int* msg_seq;
+namespace PointSub{
+    int Topic_X;
+    int* x_Ptr;
+    int msg_seq;
+    int* seq_Ptr;
+    void pointCallback(const nav_cctv::LocationsConstPtr&Topic_point);
 
-void pointCallback(const nav_cctv::LocationsConstPtr&Topic_point);
+}
+
+
 
 #endif

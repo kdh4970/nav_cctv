@@ -5,18 +5,18 @@
 #include "nav_cctv/Locations.h"
 #include "point_subscriber.h"
 
-extern int* Topic_X;
-extern int* msg_seq;
-
 PLUGINLIB_EXPORT_CLASS(simple_layer_namespace::DynamicLayer, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
 using costmap_2d::NO_INFORMATION;
 
+
+
 namespace simple_layer_namespace
 {
 
 DynamicLayer::DynamicLayer() {}
+
 
 void DynamicLayer::onInitialize()
 {
@@ -24,6 +24,7 @@ void DynamicLayer::onInitialize()
   current_ = true;
   default_value_ = NO_INFORMATION;
   matchSize();
+
 
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
@@ -53,8 +54,9 @@ void DynamicLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
 
   //double mark_x = robot_x + 0.5*cos(robot_yaw), mark_y = robot_y + 0.5*sin(robot_yaw);
   // cos^2 + sin^2 = 1 
-  ROS_INFO("Received point is %d, msg_seq is %d",*Topic_X,*msg_seq);
-  double mark_x = *Topic_X, mark_y= 100;
+  
+  //ROS_INFO("Received point is %d, msg_seq is %d",*person_x,*message_seq);
+  double mark_x = 150, mark_y= 100;
   unsigned int mx;
   unsigned int my;
   if(worldToMap(mark_x, mark_y, mx, my)){
