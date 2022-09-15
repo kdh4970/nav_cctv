@@ -3,6 +3,8 @@
 #include <ros/console.h>
 #include "conio.h"
 
+
+
 PLUGINLIB_EXPORT_CLASS(simple_layer_namespace::GridLayer, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
@@ -55,7 +57,6 @@ void GridLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
     setCost(mx, my, LETHAL_OBSTACLE);
   }
 
-  
 
 
   *min_x = std::min(*min_x, mark_x);
