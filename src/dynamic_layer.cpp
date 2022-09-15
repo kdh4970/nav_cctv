@@ -56,9 +56,11 @@ void DynamicLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   if (!enabled_)
     return;
 
-  
+  // Save initial cost
   char pastcost = getCost(received_point_x,received_point_y);
   
+
+  // old
   //double mark_x = robot_x + 0.5*cos(robot_yaw), mark_y = robot_y + 0.5*sin(robot_yaw);
   // cos^2 + sin^2 = 1 
 
@@ -66,6 +68,8 @@ void DynamicLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   //double mark_x = (double)received_point_x , mark_y= (double)received_point_y;
   double mark_x, mark_y;
 
+
+  // 
   unsigned int mx = received_point_x;
   unsigned int my = received_point_y;
   mapToWorld(mx, my, mark_x, mark_y);
@@ -82,7 +86,7 @@ void DynamicLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   *max_x = std::max(*max_x, mark_x);
   *max_y = std::max(*max_y, mark_y);
 
-  // clear past point
+  // Clear past point
   setCost(past_x, past_y, pastcost);
 
   ROS_INFO("Cleared x : %f, y : %f",past_x,past_y);

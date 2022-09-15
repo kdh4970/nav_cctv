@@ -1,7 +1,7 @@
 <launch>
   <master auto="start"/>
   
-  <!-- Point Publisher and Subscriber-->>
+  <!-- Point Publisher -->>
   <node pkg="nav_cctv" name="point_publisher"  type="point_publisher" />
  
 
