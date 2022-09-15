@@ -51,10 +51,17 @@ void GridLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   double mark_x = robot_x + 0.5*cos(robot_yaw), mark_y = robot_y + 0.5*sin(robot_yaw);
   // cos^2 + sin^2 = 1 
 
+  
+
   unsigned int mx;
   unsigned int my;
   if(worldToMap(mark_x, mark_y, mx, my)){
     setCost(mx, my, LETHAL_OBSTACLE);
+
+    // absolute coordinate location marking
+    //setCost(50, 50, LETHAL_OBSTACLE);
+    //setCost(300, 300, LETHAL_OBSTACLE);
+
   }
 
 

@@ -24,6 +24,7 @@ public:
   }
 
   virtual void matchSize();
+  
 
 private:
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
