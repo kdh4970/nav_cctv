@@ -321,8 +321,70 @@ pixel index -> 200 pixel = 10 grid = 10 meter
 1 pixel = 0.05 meter
 0.05 = map resolution
 
-해야 할 것
->> 절대 좌표 마킹
+-------------------------------------------------------------------------------------------
+09-02
+
+baseGlobalPlanner >> navfn 패키지 navfnros.cpp / nav_core 패키지 base_global_planner.h
+
+grid clearing test 완료.
+절대좌표 마킹 test 완료.
+
+c++ test topic publisher 작성
+
+
+---------------------------------------------------------------------------------
+09-03 ~ 09-07
+
+custom layer
+>> global costmap : 사용
+>> local costmap : 사용안함 (라이다의 정확도가 더 높을 것으로 생각됨.)
+
+dynamic_layer에 point subscribe 코드 추가
+catkin_make error 해결하기
+
+
+------------------------------------------------------------------------------
+09-13
+
+move_base에 test 노드 구성 
+x,y.seq subscribe 구성 완료\
+
+
+---------------------------------------------------------------------------------------
+09-15
+
+move_base_node.cpp 에서 move_base 노드가 /points 토픽을 subscribe 하도록 설정.
+
+전달받은 토픽으로부터 절대좌표 marking 완료.
+
+절대좌표 marking시 실시간 갱신이 안되던 문제 해결
+>>  절대좌표 입력시 맵좌표로의 변환이 되지 않았기 때문, 코드 수정
+
+
+
+< 패키지 변동사항 정리 >
+move_base
+>> move_base_node.cpp에 point topic subscriber 추가
+>> global_point.cpp 작성(전역변수 선언)
+nav_cctv
+>> practice 패키지로부터 bringup.launch를 move_base와 통합한 launch 파일 작성($nav_new)
+>> costmap custom layer 및 test용 publisher, move_base 파라미터 파일 등 포함.
+
+
+실제 yolo 연산 결과를 받기 위해 data type을 int16에서 int16[]로 변경해야 함?
+>> move_base에서 subscribe 하는 부분
+>> 전역변수를 벡터로 선언 해야함
+>> dynamic layer에서 cost값을 할당하는 부분
+
+
+
+----------------------------------------------------------------------------
+
+
+
+ 
+
+
 
 
 
