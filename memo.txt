@@ -379,7 +379,22 @@ nav_cctv
 
 
 ----------------------------------------------------------------------------
+09-18
 
+단일점 layer - roslaunch nav_cctv dynamic_point.launch
+다중점 layer - roslaunch nav_cctv cctv.launch
+
+global planner (navfn -> GlobalPlanner)
+local planner (TrajectoryPlannerROS -> DWAPlannerROS)
+플래너 구현 완료.
+
+layer 확인된 오류 : 동적 좌표가 중첩되는 경우 중첩 지점에서 cost가 복원되지 않는 현상
+>> yolo 좌표는 중첩 좌표일 가능성이 거의 없으므로 무시해도 지장이 없을 것으로 생각됨.
+
+
+< 잔업 >
+yolo 연동
+global planner 알고리즘 및 파라미터 최적화
 
 
  
