@@ -1,0 +1,15 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_footprint
+  update_frequency: 10
+  publish_frequency: 20
+  always_send_full_costmap: true
+  static_map: true
+  inflation_layer:
+    enabled:              true
+    cost_scaling_factor:  5  
+    inflation_radius:     0.1
+  plugins:
+    - {name: static_layer,        type: "costmap_2d::StaticLayer"}
+    - {name: cctv_layer,       type: "cctv_layer_namespace::CctvLayer"}
+    - {name: inflation_layer,        type: "costmap_2d::InflationLayer"}

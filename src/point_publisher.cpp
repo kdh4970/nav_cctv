@@ -1,5 +1,7 @@
 #include <ros/ros.h>
 #include "nav_cctv/Point.h"
+#include "nav_cctv/Locations.h"
+#include "nav_cctv/Coordinate.h"
 #include <vector>
 
 

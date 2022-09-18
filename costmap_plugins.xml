@@ -14,4 +14,9 @@
       <description>Demo Layer which is marking dynamic point by subscribed topic</description>
     </class>
   </library>
+  <library path="lib/libcctv_layer">
+    <class type="cctv_layer_namespace::CctvLayer" base_class_type="costmap_2d::Layer">
+      <description>Practical layer what subscribe real YOLO topic</description>
+    </class>
+  </library>
 </class_libraries>
