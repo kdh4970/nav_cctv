@@ -64,6 +64,14 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   
   for(int i=0; i<received_point_x.size();i++)
   {
+    // Clearing
+    for(int i = 0; i < pastcost.size();i++) 
+    {
+      if(past_x.size()==0 || past_y.size()==0) // Ignore first Clearing
+        break;
+      setCost(past_x[i], past_y[i], pastcost[i]);
+    }
+    
     // Save cost
     pastcost.push_back(getCost(received_point_x[i],received_point_y[i]));
 
@@ -79,18 +87,8 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
     *max_y = std::max(*max_y, mark_y);
   }
 
-  //setCost(mark_x, mark_y, LETHAL_OBSTACLE);
-  //ROS_INFO("Received x : %d, y : %d, seq : %d ",received_point_x,received_point_y,received_point_msg_seq);
-  //ROS_INFO("Marked x : %f, y : %f",mark_x,mark_y);
 
 
-  // Clearing
-  for(int i = 0; i < pastcost.size();i++) 
-  {
-    if(past_x.size()==0 || past_y.size()==0) // Ignore first Clearing
-      break;
-    setCost(past_x[i], past_y[i], pastcost[i]);
-  }
   // Reset past location vector
   std::vector<double>().swap(past_x);
   std::vector<double>().swap(past_y);

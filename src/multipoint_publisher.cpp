@@ -8,9 +8,9 @@ int main(int argc, char **argv)
     ros::init(argc,argv,"point_publisher");
     ros::NodeHandle nh;
     ros::Publisher point_pub = nh.advertise<nav_cctv::MultiPoint>("points",1);
-    ros::Rate loop_rate(4);
+    ros::Rate loop_rate(2);
     nav_cctv::MultiPoint pub_loc;
-
+    int ds=0;
 
     int count=0;
     while (ros::ok())
@@ -19,14 +19,20 @@ int main(int argc, char **argv)
         std::vector<int16_t> temp_pub_x;
         std::vector<int16_t> temp_pub_y;
 
-        temp_pub_x.push_back(80+count);
-        temp_pub_y.push_back(80+count);
+        temp_pub_x.push_back(180+ds);
+        temp_pub_y.push_back(180+ds);
 
-        temp_pub_x.push_back(100);
-        temp_pub_y.push_back(80+count);
+        temp_pub_x.push_back(200);
+        temp_pub_y.push_back(145+ds);
     
-        temp_pub_x.push_back(140-count);
-        temp_pub_y.push_back(100-count);
+        temp_pub_x.push_back(240-ds);
+        temp_pub_y.push_back(220-ds);
+
+        temp_pub_x.push_back(175);
+        temp_pub_y.push_back(170);
+
+        temp_pub_x.push_back(170);
+        temp_pub_y.push_back(165);
 
         pub_loc.x = temp_pub_x;
         pub_loc.y = temp_pub_y;
@@ -34,6 +40,8 @@ int main(int argc, char **argv)
         
         point_pub.publish(pub_loc);
         ++count;
+        ++ds;
+        if(ds>70) ds=0;
         loop_rate.sleep();
 
     }

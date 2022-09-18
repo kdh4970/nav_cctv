@@ -24,8 +24,9 @@ local_costmap:
       clearing: true
   inflation_layer:
     enabled:              true
-    cost_scaling_factor:  5  
-    inflation_radius:     0.1
+    cost_scaling_factor:  3  
+    inflation_radius:     0.25
   plugins:
+    - {name: static_layer,        type: "costmap_2d::StaticLayer"}
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
     - {name: inflation_layer,        type: "costmap_2d::InflationLayer"}

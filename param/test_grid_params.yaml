@@ -1,5 +1,0 @@
-plugins: 
-    - {name: test_grid,       type: "simple_layer_namespace::GridLayer"}
-publish_frequency: 1.0
-#footprint: [[-0.325, -0.325], [-0.325, 0.325], [0.325, 0.325], [0.46, 0.0], [0.325, -0.325]]
-robot_radius: 0.3

@@ -7,8 +7,8 @@ global_costmap:
   static_map: true
   inflation_layer:
     enabled:              true
-    cost_scaling_factor:  5  
-    inflation_radius:     0.1
+    cost_scaling_factor:  3.0  
+    inflation_radius:     0.25
   plugins:
     - {name: static_layer,        type: "costmap_2d::StaticLayer"}
     - {name: test_grid,       type: "simple_layer_namespace::GridLayer"}
