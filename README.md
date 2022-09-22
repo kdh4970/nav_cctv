@@ -10,5 +10,5 @@ dynamic_point.launch >> consist layer which is subscribe and marking dynamic poi
 cctv.launch >> consist layer which is subscribe and marking multiple dynamic point  
 
 ## Base package
-ros-planning navigation package (lower costmap_2d and move_base)  
-practice package (our robot package which is include odom, sensor, tf, etc... )  
+ros-planning navigation package (costmap_2d, move_base, etc...)  
+practice package (our robot configuration package which is include odom, sensor, tf, etc... )  
