@@ -7,8 +7,9 @@
 extern std::vector<int> received_point_x;
 extern std::vector<int> received_point_y;
 extern int received_point_msg_seq;
-std::vector<double> past_x ;
-std::vector<double> past_y ;
+std::vector<int> past_x ;
+std::vector<int> past_y ;
+std::vector<char> pastcost;
 PLUGINLIB_EXPORT_CLASS(cctv_layer_namespace::CctvLayer, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
@@ -63,48 +64,38 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
 
   double mark_x, mark_y;
 
-  std::vector<char> pastcost;
+
+  // Clearing
+  for(int i=0; i<past_x.size();i++) clearPastcost(pastcost);
+
+  // Reset past location vector
+  std::vector<int>().swap(past_x);
+  std::vector<int>().swap(past_y);
+  std::vector<char>().swap(pastcost);
+
   for(int i=0; i<received_point_x.size();i++)
   {
-    // Clearing
-    if(past_x.size()!=0 || past_y.size()!=0) // Ignore first Clearing
-      clearPastcost(pastcost);
-    
+
     // Save cost
     pastcost.push_back(getCost(received_point_x[i],received_point_y[i]));
 
     // Marking
-    if(received_point_x[i] < 380 && received_point_y[i] < 380)
-    {
-      unsigned int mx = received_point_x[i];
-      unsigned int my = received_point_y[i];
-      mapToWorld(mx, my, mark_x, mark_y);
-      setCost(mx, my, LETHAL_OBSTACLE);
+    unsigned int mx = received_point_x[i];
+    unsigned int my = received_point_y[i];
+    mapToWorld(mx, my, mark_x, mark_y);
+    setCost(mx, my, LETHAL_OBSTACLE);
       
-      *min_x = std::min(*min_x, mark_x);
-      *min_y = std::min(*min_y, mark_y);
-      *max_x = std::max(*max_x, mark_x);
-      *max_y = std::max(*max_y, mark_y);
-    }
-
+    *min_x = std::min(*min_x, mark_x);
+    *min_y = std::min(*min_y, mark_y);
+    *max_x = std::max(*max_x, mark_x);
+    *max_y = std::max(*max_y, mark_y);
+    
+    // Allocate new past location
+    past_x.push_back(received_point_x[i]);
+    past_y.push_back(received_point_y[i]);
 
   }
 
-
-
-  // Reset past location vector
-  std::vector<double>().swap(past_x);
-  std::vector<double>().swap(past_y);
-
-  // Allocate new past location
-  for(int i = 0; i< received_point_x.size();i++)
-  {
-    if(received_point_x[i] < 380 && received_point_y[i] < 380)
-    {
-      past_x.push_back(received_point_x[i]);
-      past_y.push_back(received_point_y[i]);
-    }
-  }
   
 
 }
