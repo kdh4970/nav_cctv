@@ -23,9 +23,11 @@ public:
     return true;
   }
   virtual void matchSize();
+  
 private:
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
+  void clearPastcost(std::vector<char> &pastcost);
 };
 }
 #endif

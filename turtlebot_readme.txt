@@ -21,7 +21,8 @@ nav_cctv/src에 있는 cctv_layer.cpp, dynamic_layer.cpp, listener.cpp 에서
 nav_cctv/launch/cctv.launch 파일의 point publisher 부분을 복사하여 사용할 런치파일의 move_base 보다 위에 붙여넣기.
 
 5-2.
-nav_cctv/launch/cctv.launch 파일의 move_base 부분 중 순서대로 4개 복붙(costmap 관련 파라미터)
+nav_cctv/launch/cctv.launch 파일의 move_base 부분 
+new_costmap_common_params, new_local_params, cctv_global_params 교체
 
 6.
 실행 

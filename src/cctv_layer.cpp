@@ -50,41 +50,44 @@ void CctvLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t 
   enabled_ = config.enabled;
 }
 
+void CctvLayer::clearPastcost(std::vector<char> &pastcost)
+{
+  for(int i = 0; i < pastcost.size();i++) setCost(past_x[i], past_y[i], pastcost[i]);
+}
+
 void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
     return;
 
-  std::vector<char> pastcost;
-  
-  //double mark_x = (double)received_point_x , mark_y= (double)received_point_y;
   double mark_x, mark_y;
 
-  
+  std::vector<char> pastcost;
   for(int i=0; i<received_point_x.size();i++)
   {
     // Clearing
-    for(int i = 0; i < pastcost.size();i++) 
-    {
-      if(past_x.size()==0 || past_y.size()==0) // Ignore first Clearing
-        break;
-      setCost(past_x[i], past_y[i], pastcost[i]);
-    }
+    if(past_x.size()!=0 || past_y.size()!=0) // Ignore first Clearing
+      clearPastcost(pastcost);
     
     // Save cost
     pastcost.push_back(getCost(received_point_x[i],received_point_y[i]));
 
     // Marking
-    unsigned int mx = received_point_x[i];
-    unsigned int my = received_point_y[i];
-    mapToWorld(mx, my, mark_x, mark_y);
-    setCost(mx, my, LETHAL_OBSTACLE);
+    if(received_point_x[i] < 380 && received_point_y[i] < 380)
+    {
+      unsigned int mx = received_point_x[i];
+      unsigned int my = received_point_y[i];
+      mapToWorld(mx, my, mark_x, mark_y);
+      setCost(mx, my, LETHAL_OBSTACLE);
+      
+      *min_x = std::min(*min_x, mark_x);
+      *min_y = std::min(*min_y, mark_y);
+      *max_x = std::max(*max_x, mark_x);
+      *max_y = std::max(*max_y, mark_y);
+    }
 
-    *min_x = std::min(*min_x, mark_x);
-    *min_y = std::min(*min_y, mark_y);
-    *max_x = std::max(*max_x, mark_x);
-    *max_y = std::max(*max_y, mark_y);
+
   }
 
 
@@ -96,8 +99,11 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   // Allocate new past location
   for(int i = 0; i< received_point_x.size();i++)
   {
-    past_x.push_back(received_point_x[i]);
-    past_y.push_back(received_point_y[i]);
+    if(received_point_x[i] < 380 && received_point_y[i] < 380)
+    {
+      past_x.push_back(received_point_x[i]);
+      past_y.push_back(received_point_y[i]);
+    }
   }
   
 
