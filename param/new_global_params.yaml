@@ -1,8 +1,8 @@
 global_costmap:
   global_frame: map
   robot_base_frame: base_footprint
-  update_frequency: 5.0
-  publish_frequency: 2.5
+  update_frequency: 2
+  publish_frequency: 2
   always_send_full_costmap: true
   static_map: true
   inflation_layer:
