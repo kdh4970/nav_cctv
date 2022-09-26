@@ -10,15 +10,18 @@
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
   <!-- AMCL --> 
-  <include file="$(find practice)/launch/include/amcl.launch" />
+  <include file="$(find nav_cctv)/launch/amcl.launch" />
 
   <!-- move_base -->>
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <rosparam file="$(find nav_cctv)/param/base_global_planner_params.yaml" command="load" />
+    <rosparam file="$(find nav_cctv)/param/base_local_planner_params.yaml" command="load" />
     <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="global_costmap" /> 
     <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find nav_cctv)/param/new_local_params.yaml" command="load" />
-    <rosparam file="$(find nav_cctv)/param/new_global_params.yaml" command="load" /> 
-    <rosparam file="$(find nav_cctv)/param/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find nav_cctv)/param/move_base_params.yaml" command="load" />
   </node>
 
   <!-- rviz -->

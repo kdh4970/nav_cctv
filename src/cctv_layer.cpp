@@ -1,15 +1,12 @@
 #include "cctv_layer/cctv_layer.h"
 #include <pluginlib/class_list_macros.h>
-#include <ros/ros.h>
 #include <ros/console.h>
 #include "/home/capstone/catkin_ws/src/navigation/move_base/src/global_multi_point.cpp"
 
 extern std::vector<int> received_point_x;
 extern std::vector<int> received_point_y;
 extern int received_point_msg_seq;
-std::vector<int> past_x ;
-std::vector<int> past_y ;
-std::vector<char> pastcost;
+
 PLUGINLIB_EXPORT_CLASS(cctv_layer_namespace::CctvLayer, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
@@ -56,26 +53,27 @@ void CctvLayer::clearPastcost(std::vector<char> &pastcost)
   for(int i = 0; i < pastcost.size();i++) setCost(past_x[i], past_y[i], pastcost[i]);
 }
 
+
 void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
     return;
-
+  ROS_INFO("initiate update");
   double mark_x, mark_y;
-
-
+ 
   // Clearing
   for(int i=0; i<past_x.size();i++) clearPastcost(pastcost);
-
+  ROS_INFO("clearing ok");
   // Reset past location vector
   std::vector<int>().swap(past_x);
   std::vector<int>().swap(past_y);
   std::vector<char>().swap(pastcost);
 
+  ROS_INFO("enter loop");
   for(int i=0; i<received_point_x.size();i++)
   {
-
+    
     // Save cost
     pastcost.push_back(getCost(received_point_x[i],received_point_y[i]));
 

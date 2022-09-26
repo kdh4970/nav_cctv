@@ -13,6 +13,11 @@ class CctvLayer : public costmap_2d::Layer, public costmap_2d::Costmap2D
 {
 public:
   CctvLayer();
+  int yolo_map_origin_x = 941;
+  int yolo_map_origin_y = 1984-843;//1141
+  std::vector<int> past_x ;
+  std::vector<int> past_y ;
+  std::vector<char> pastcost;
 
   virtual void onInitialize();
   virtual void updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x, double* min_y, double* max_x,
@@ -28,6 +33,7 @@ private:
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
   void clearPastcost(std::vector<char> &pastcost);
+  void transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &yolo_y,std::vector<int> &costmap_x,std::vector<int> &costmap_y);
 };
 }
 #endif

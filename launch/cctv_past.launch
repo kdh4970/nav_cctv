@@ -14,7 +14,7 @@
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
   <!-- AMCL  -->
-  <include file="$(find practice)/launch/include/amcl.launch" />
+  <include file="$(find nav_cctv)/launch/amcl.launch" />
 
   <!-- move_base -->>
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
