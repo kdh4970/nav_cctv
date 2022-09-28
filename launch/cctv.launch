@@ -6,11 +6,11 @@
  
 
   <!-- Bringup -->
-  <include file="$(find practice)/launch/AGV_bringup.launch" />
+  <include file="$(find practice)/launch/AGV_bringup2.launch" />
 
   <!-- Navigation stack -->
   <!-- Map Server -->
-  <arg name="map_file" default="$(find nav_cctv)/map/map.yaml"/>
+  <arg name="map_file" default="$(find nav_cctv)/map/capstone.yaml"/>
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
   <!-- AMCL --> 

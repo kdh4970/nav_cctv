@@ -53,33 +53,53 @@ void CctvLayer::clearPastcost(std::vector<char> &pastcost)
   for(int i = 0; i < pastcost.size();i++) setCost(past_x[i], past_y[i], pastcost[i]);
 }
 
+void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &yolo_y,std::vector<int> &costmap_x,std::vector<int> &costmap_y)
+{
+  for (int i=0;i<yolo_x.size();i++)
+  {
+    costmap_x.push_back(yolo_map_origin_x + yolo_x[i]);
+    costmap_y.push_back(yolo_map_origin_y - yolo_y[i]);
+  }
+}
 
 void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
     return;
-  ROS_INFO("initiate update");
+  //ROS_INFO("initiate update");
   double mark_x, mark_y;
- 
+  std::vector<int> result_x,result_y;
+  //ROS_INFO("start transform");
+  transformCoordinate(received_point_x,received_point_y,result_x,result_y);
+  //ROS_INFO("transform ok");
   // Clearing
   for(int i=0; i<past_x.size();i++) clearPastcost(pastcost);
-  ROS_INFO("clearing ok");
+  //ROS_INFO("clearing ok");
   // Reset past location vector
   std::vector<int>().swap(past_x);
   std::vector<int>().swap(past_y);
   std::vector<char>().swap(pastcost);
 
-  ROS_INFO("enter loop");
-  for(int i=0; i<received_point_x.size();i++)
+  //ROS_INFO("marking origin");
+  //mapToWorld(941, 1984-843, mark_x, mark_y);
+  //setCost(941, 1984-843, LETHAL_OBSTACLE);
+      
+  *min_x = std::min(*min_x, mark_x);
+  *min_y = std::min(*min_y, mark_y);
+  *max_x = std::max(*max_x, mark_x);
+  *max_y = std::max(*max_y, mark_y);
+
+  //ROS_INFO("enter loop");
+  for(int i=0; i<result_x.size();i++)
   {
     
     // Save cost
-    pastcost.push_back(getCost(received_point_x[i],received_point_y[i]));
+    pastcost.push_back(getCost(result_x[i],result_y[i]));
 
     // Marking
-    unsigned int mx = received_point_x[i];
-    unsigned int my = received_point_y[i];
+    unsigned int mx = result_x[i];
+    unsigned int my = result_y[i];
     mapToWorld(mx, my, mark_x, mark_y);
     setCost(mx, my, LETHAL_OBSTACLE);
       
@@ -89,8 +109,8 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
     *max_y = std::max(*max_y, mark_y);
     
     // Allocate new past location
-    past_x.push_back(received_point_x[i]);
-    past_y.push_back(received_point_y[i]);
+    past_x.push_back(result_x[i]);
+    past_y.push_back(result_y[i]);
 
   }
 
