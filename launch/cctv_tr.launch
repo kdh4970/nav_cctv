@@ -1,27 +1,27 @@
 <launch>
   <master auto="start"/>
   
-  <!-- Point Publisher 
-  <node pkg="nav_cctv" name="multipoint_publisher"  type="multipoint_publisher" />-->
+  <!-- Point Publisher -->
+  <node pkg="nav_cctv" name="multipoint_publisher"  type="multipoint_publisher" />
  
 
   <!-- Bringup -->
-  <include file="$(find practice)/launch/AGV_bringup.launch" />
+  <include file="$(find practice)/launch/AGV_bringup2.launch" />
 
   <!-- Navigation stack -->
   <!-- Map Server -->
-  <arg name="map_file" default="$(find nav_cctv)/map/past_map.yaml"/>
+  <arg name="map_file" default="$(find nav_cctv)/map/capstone.yaml"/>
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
-  <!-- AMCL  -->
+  <!-- AMCL --> 
   <include file="$(find nav_cctv)/launch/amcl.launch" />
 
   <!-- move_base -->>
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <param name="base_global_planner" value="global_planner/GlobalPlanner" />
-    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <!--<param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />-->
     <rosparam file="$(find nav_cctv)/param/base_global_planner_params.yaml" command="load" />
-    <rosparam file="$(find nav_cctv)/param/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find nav_cctv)/param/base_local.yaml" command="load" />
     <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="global_costmap" /> 
     <rosparam file="$(find nav_cctv)/param/new_costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find nav_cctv)/param/new_local_params.yaml" command="load" />
