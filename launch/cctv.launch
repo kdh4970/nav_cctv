@@ -10,12 +10,26 @@
 
   <!-- Navigation stack -->
   <!-- Map Server -->
-  <arg name="map_file" default="$(find nav_cctv)/map/capstone.yaml"/>
+  <arg name="map_file" default="/home/capstone/capstone.yaml"/>
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
-  <!-- AMCL --> 
-  <include file="$(find nav_cctv)/launch/amcl.launch" />
+  <!-- Odom-IMU Extended Kalman Filter -->
+  <!-- EKF node -->
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+    <rosparam command="load" file="$(find practice)/config/ekf_localization.yaml"/>
+    <remap from="odometry/filtered" to="odom"/>
+  </node>
+  <node pkg="practice" type="tf_publisher.py" name="tf_publisher" output="screen"/>
 
+  <!-- publish /tf , URDF -->    
+  <param name="robot_description" textfile="$(find robot_description)/urdf/AGV.urdf" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+
+
+  <include file="$(find practice)/launch/include/amcl.launch" />
+  
   <!-- move_base -->>
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <param name="base_global_planner" value="global_planner/GlobalPlanner" />
