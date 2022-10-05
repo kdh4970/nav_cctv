@@ -62,10 +62,8 @@ void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &y
   }
 }
 
-void CctvLayer::markCircle(int point_x, int point_y,double* min_x,double* min_y, double* max_x, double* max_y)
+void CctvLayer::makeCircle(int point_x, int point_y,std::vector<int> circle_x, std::vector<int> circle_y)
 {
-  double mark_x, mark_y;
-  std::vector<int> circle_x,circle_y;
   int radius = 3;
 
   // Calculate Circle point
@@ -79,28 +77,6 @@ void CctvLayer::markCircle(int point_x, int point_y,double* min_x,double* min_y,
         circle_y.push_back(point_y+j);
       }
     }
-  }
-
-
-  for(int i = 0; i<circle_x.size();i++)
-  {
-    // Save cost
-    pastcost.push_back(getCost(circle_x[i],circle_y[i]));
-    
-    // Marking
-    unsigned int mx = circle_x[i];
-    unsigned int my = circle_y[i];
-    mapToWorld(mx, my, mark_x, mark_y);
-    setCost(mx, my, LETHAL_OBSTACLE);
-    
-    *min_x = std::min(*min_x, mark_x);
-    *min_y = std::min(*min_y, mark_y);
-    *max_x = std::max(*max_x, mark_x);
-    *max_y = std::max(*max_y, mark_y);
-
-    // Allocate new past location
-    past_x.push_back(circle_x[i]);
-    past_y.push_back(circle_y[i]);
   }
 }
 
@@ -123,9 +99,34 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   std::vector<int>().swap(past_x);
   std::vector<int>().swap(past_y);
   std::vector<char>().swap(pastcost);
-  for(int i = 0; i<result_x.size();i++) 
-  markCircle(result_x[i],result_y[i],*min_x,*min_y,*max_x,*max_y);
-  
+
+  std::vector<int> circle_x,circle_y;
+
+  for(int i=0; i<result_x.size();i++)
+  {
+    makeCircle(result_x[i],result_y[i],circle_x,circle_y);
+    for(int j=0; j<circle_x.size();j++)
+    {
+      // Save cost
+      pastcost.push_back(getCost(circle_x[i],circle_y[i]));
+
+      // Marking
+      unsigned int mx = circle_x[i];
+      unsigned int my = circle_y[i];
+      mapToWorld(mx, my, mark_x, mark_y);
+      setCost(mx, my, LETHAL_OBSTACLE);
+      
+      *min_x = std::min(*min_x, mark_x);
+      *min_y = std::min(*min_y, mark_y);
+      *max_x = std::max(*max_x, mark_x);
+      *max_y = std::max(*max_y, mark_y);
+    
+      // Allocate new past location
+      past_x.push_back(circle_x[i]);
+      past_y.push_back(circle_y[i]);
+    }
+  }
+
   // for(int i=0; i<result_x.size();i++)
   // {
     

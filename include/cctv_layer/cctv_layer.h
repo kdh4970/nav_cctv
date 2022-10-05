@@ -35,7 +35,7 @@ private:
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
   void clearPastcost(std::vector<char> &pastcost);
   void transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &yolo_y,std::vector<int> &costmap_x,std::vector<int> &costmap_y);
-  void markCircle(int point_x, int point_y,double* min_x,double* min_y, double* max_x, double* max_y);
+  void makeCircle(int point_x, int point_y,std::vector<int> &circle_x,std::vector<int> &circle_y);
 };
 }
 #endif
