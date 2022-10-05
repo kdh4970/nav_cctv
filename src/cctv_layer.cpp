@@ -62,7 +62,7 @@ void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &y
   }
 }
 
-void CctvLayer::makeCircle(int point_x, int point_y,std::vector<int> circle_x, std::vector<int> circle_y)
+void CctvLayer::makeCircle(int point_x, int point_y,std::vector<int> &circle_x, std::vector<int> &circle_y)
 {
   int radius = 3;
 
@@ -100,10 +100,10 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   std::vector<int>().swap(past_y);
   std::vector<char>().swap(pastcost);
 
-  std::vector<int> circle_x,circle_y;
 
   for(int i=0; i<result_x.size();i++)
   {
+    std::vector<int> circle_x,circle_y;
     makeCircle(result_x[i],result_y[i],circle_x,circle_y);
     for(int j=0; j<circle_x.size();j++)
     {
