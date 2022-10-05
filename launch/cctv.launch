@@ -2,7 +2,7 @@
   <master auto="start"/>
   
   <!-- Point Publisher -->
-  <node pkg="nav_cctv" name="multipoint_publisher"  type="multipoint_publisher" />
+  <!--<node pkg="nav_cctv" name="multipoint_publisher"  type="multipoint_publisher" />-->
  
 
   <!-- Bringup -->

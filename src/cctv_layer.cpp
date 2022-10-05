@@ -55,10 +55,14 @@ void CctvLayer::clearPastcost(std::vector<char> &pastcost)
 
 void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &yolo_y,std::vector<int> &costmap_x,std::vector<int> &costmap_y)
 {
+  // yolo to costmap scaling
+  
+
+
   for (int i=0;i<yolo_x.size();i++)
   {
-    costmap_x.push_back(yolo_map_origin_x + yolo_x[i]);
-    costmap_y.push_back(yolo_map_origin_y - yolo_y[i]);
+    costmap_x.push_back(yolo_map_origin_x + round((yolo_x[i] - 174) * 0.1997));
+    costmap_y.push_back(yolo_map_origin_y - round((yolo_y[i] - 87) * 0.1997));
   }
 }
 
