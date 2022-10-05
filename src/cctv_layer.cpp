@@ -57,8 +57,8 @@ void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &y
 {
   for (int i=0;i<yolo_x.size();i++)
   {
-    costmap_x.push_back(yolo_map_origin_x + round((yolo_x[i] - 174) * yolo_to_costmap_scale));
-    costmap_y.push_back(yolo_map_origin_y - round((yolo_y[i] - 87) * yolo_to_costmap_scale));
+    costmap_x.push_back(yolo_map_origin_x + round((yolo_x[i] - 174) * 0.1997));
+    costmap_y.push_back(yolo_map_origin_y - round((yolo_y[i] - 87) * 0.1997));
   }
 }
 
@@ -105,6 +105,7 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   {
     std::vector<int> circle_x,circle_y;
     makeCircle(result_x[i],result_y[i],circle_x,circle_y);
+
     for(int j=0; j<circle_x.size();j++)
     {
       // Save cost
