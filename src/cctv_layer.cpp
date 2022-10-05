@@ -62,8 +62,7 @@ void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &y
   }
 }
 
-void CctvLayer::markCircle(int point_x, int point_y,double* min_x,
-                                           double* min_y, double* max_x, double* max_y)
+void CctvLayer::markCircle(int point_x, int point_y,double* min_x,double* min_y, double* max_x, double* max_y)
 {
   double mark_x, mark_y;
   std::vector<int> circle_x,circle_y;
@@ -76,8 +75,8 @@ void CctvLayer::markCircle(int point_x, int point_y,double* min_x,
     {
       if(i*i + j*j <= radius*radius)
       {
-        circle_x.pushback(point_x+i);
-        circle_y.pushback(point_y+j);
+        circle_x.push_back(point_x+i);
+        circle_y.push_back(point_y+j);
       }
     }
   }
@@ -86,7 +85,7 @@ void CctvLayer::markCircle(int point_x, int point_y,double* min_x,
   for(int i = 0; i<circle_x.size();i++)
   {
     // Save cost
-    pastcost.push_back(getCost(result_x[i],result_y[i]));
+    pastcost.push_back(getCost(circle_x[i],circle_y[i]));
     
     // Marking
     unsigned int mx = circle_x[i];
@@ -124,7 +123,8 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   std::vector<int>().swap(past_x);
   std::vector<int>().swap(past_y);
   std::vector<char>().swap(pastcost);
-  for(int i = 0; i<resultt_x.size();i++) markCircle(result_x[i],result_y[j],*min_x,*min_y,*max_x,*max_y);
+  for(int i = 0; i<result_x.size();i++) 
+  markCircle(result_x[i],result_y[i],*min_x,*min_y,*max_x,*max_y);
   
   // for(int i=0; i<result_x.size();i++)
   // {
