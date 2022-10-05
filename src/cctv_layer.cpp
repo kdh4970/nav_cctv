@@ -108,11 +108,11 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
     for(int j=0; j<circle_x.size();j++)
     {
       // Save cost
-      pastcost.push_back(getCost(circle_x[i],circle_y[i]));
+      pastcost.push_back(getCost(circle_x[j],circle_y[j]));
 
       // Marking
-      unsigned int mx = circle_x[i];
-      unsigned int my = circle_y[i];
+      unsigned int mx = circle_x[j];
+      unsigned int my = circle_y[j];
       mapToWorld(mx, my, mark_x, mark_y);
       setCost(mx, my, LETHAL_OBSTACLE);
       
@@ -122,8 +122,8 @@ void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
       *max_y = std::max(*max_y, mark_y);
     
       // Allocate new past location
-      past_x.push_back(circle_x[i]);
-      past_y.push_back(circle_y[i]);
+      past_x.push_back(circle_x[j]);
+      past_y.push_back(circle_y[j]);
     }
   }
 
