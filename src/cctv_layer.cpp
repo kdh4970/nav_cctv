@@ -55,68 +55,99 @@ void CctvLayer::clearPastcost(std::vector<char> &pastcost)
 
 void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &yolo_y,std::vector<int> &costmap_x,std::vector<int> &costmap_y)
 {
-  // yolo to costmap scaling
-  
-
-
   for (int i=0;i<yolo_x.size();i++)
   {
-    costmap_x.push_back(yolo_map_origin_x + round((yolo_x[i] - 174) * 0.1997));
-    costmap_y.push_back(yolo_map_origin_y - round((yolo_y[i] - 87) * 0.1997));
+    costmap_x.push_back(yolo_map_origin_x + round((yolo_x[i] - 174) * yolo_to_costmap_scale));
+    costmap_y.push_back(yolo_map_origin_y - round((yolo_y[i] - 87) * yolo_to_costmap_scale));
   }
 }
+
+void CctvLayer::markCircle(int point_x, int point_y,double* min_x,
+                                           double* min_y, double* max_x, double* max_y)
+{
+  double mark_x, mark_y;
+  std::vector<int> circle_x,circle_y;
+  int radius = 3;
+
+  // Calculate Circle point
+  for (int i = -radius ; i <= radius ; i++)
+  {
+    for(int j = -radius ; j <= radius ; j++)
+    {
+      if(i*i + j*j <= radius*radius)
+      {
+        circle_x.pushback(point_x+i);
+        circle_y.pushback(point_y+j);
+      }
+    }
+  }
+
+
+  for(int i = 0; i<circle_x.size();i++)
+  {
+    // Save cost
+    pastcost.push_back(getCost(result_x[i],result_y[i]));
+    
+    // Marking
+    unsigned int mx = circle_x[i];
+    unsigned int my = circle_y[i];
+    mapToWorld(mx, my, mark_x, mark_y);
+    setCost(mx, my, LETHAL_OBSTACLE);
+    
+    *min_x = std::min(*min_x, mark_x);
+    *min_y = std::min(*min_y, mark_y);
+    *max_x = std::max(*max_x, mark_x);
+    *max_y = std::max(*max_y, mark_y);
+
+    // Allocate new past location
+    past_x.push_back(circle_x[i]);
+    past_y.push_back(circle_y[i]);
+  }
+}
+
 
 void CctvLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
     return;
-  //ROS_INFO("initiate update");
   double mark_x, mark_y;
   std::vector<int> result_x,result_y;
-  //ROS_INFO("start transform");
+
+  // Change from received yolo point coordinate to costmap coordinate
   transformCoordinate(received_point_x,received_point_y,result_x,result_y);
-  //ROS_INFO("transform ok");
-  // Clearing
+  
+  // Clear point which was marked in past loop 
   for(int i=0; i<past_x.size();i++) clearPastcost(pastcost);
-  //ROS_INFO("clearing ok");
+  
   // Reset past location vector
   std::vector<int>().swap(past_x);
   std::vector<int>().swap(past_y);
   std::vector<char>().swap(pastcost);
-
-  //ROS_INFO("marking origin");
-  //mapToWorld(941, 1984-843, mark_x, mark_y);
-  //setCost(941, 1984-843, LETHAL_OBSTACLE);
-      
-  *min_x = std::min(*min_x, mark_x);
-  *min_y = std::min(*min_y, mark_y);
-  *max_x = std::max(*max_x, mark_x);
-  *max_y = std::max(*max_y, mark_y);
-
-  //ROS_INFO("enter loop");
-  for(int i=0; i<result_x.size();i++)
-  {
+  for(int i = 0; i<resultt_x.size();i++) markCircle(result_x[i],result_y[j],*min_x,*min_y,*max_x,*max_y);
+  
+  // for(int i=0; i<result_x.size();i++)
+  // {
     
-    // Save cost
-    pastcost.push_back(getCost(result_x[i],result_y[i]));
+  //   // Save cost
+  //   pastcost.push_back(getCost(result_x[i],result_y[i]));
 
-    // Marking
-    unsigned int mx = result_x[i];
-    unsigned int my = result_y[i];
-    mapToWorld(mx, my, mark_x, mark_y);
-    setCost(mx, my, LETHAL_OBSTACLE);
+  //   // Marking
+  //   unsigned int mx = result_x[i];
+  //   unsigned int my = result_y[i];
+  //   mapToWorld(mx, my, mark_x, mark_y);
+  //   setCost(mx, my, LETHAL_OBSTACLE);
       
-    *min_x = std::min(*min_x, mark_x);
-    *min_y = std::min(*min_y, mark_y);
-    *max_x = std::max(*max_x, mark_x);
-    *max_y = std::max(*max_y, mark_y);
+  //   *min_x = std::min(*min_x, mark_x);
+  //   *min_y = std::min(*min_y, mark_y);
+  //   *max_x = std::max(*max_x, mark_x);
+  //   *max_y = std::max(*max_y, mark_y);
     
-    // Allocate new past location
-    past_x.push_back(result_x[i]);
-    past_y.push_back(result_y[i]);
+  //   // Allocate new past location
+  //   past_x.push_back(result_x[i]);
+  //   past_y.push_back(result_y[i]);
 
-  }
+  // }
 
   
 
