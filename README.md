@@ -9,6 +9,10 @@ new.launch >> make costmap using layered costmap
 dynamic_point.launch >> consist layer which is subscribe and marking dynamic point  
 cctv.launch >> consist layer which is subscribe and marking multiple dynamic point and global,local path planner
 
+## dynamic reconfigure
+move_base/global_costmap/cctv_layer
+lethal_radius
+
 ## Base package
 ros-planning navigation package (costmap_2d, move_base, etc...)  
 practice package (our robot configuration package which is include odom, sensor, tf, etc... )  
