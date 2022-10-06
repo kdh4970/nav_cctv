@@ -4,7 +4,6 @@
   <!-- Point Publisher -->
   <!--<node pkg="nav_cctv" name="multipoint_publisher"  type="multipoint_publisher" />-->
  
-
   <!-- Bringup -->
   <include file="$(find practice)/launch/AGV_bringup2.launch" />
 
@@ -25,8 +24,6 @@
   <param name="robot_description" textfile="$(find robot_description)/urdf/AGV.urdf" />
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-
-
 
   <include file="$(find practice)/launch/include/amcl.launch" />
   

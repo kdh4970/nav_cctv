@@ -178,12 +178,7 @@ void CctvLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int m
       master_grid.setCost(i, j, costmap_[index]); 
     }
   }
-  
 
-  // set cost to master costmap directly, but it doesn't inflate
-  //master_grid.setCost(received_point_x, received_point_y, LETHAL_OBSTACLE);
-  //master_grid.setCost(past_x, past_y, 0);
-  //past_x = received_point_x, past_y = received_point_y;
 }
 
 
