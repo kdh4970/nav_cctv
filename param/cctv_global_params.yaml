@@ -10,5 +10,5 @@ global_costmap:
     inflation_radius:     0.2
   plugins:
     - {name: static_layer,        type: "costmap_2d::StaticLayer"}
-    - {name: cctv_layer,       type: "cctv_layer_namespace::CctvLayer"}
+    - {name: cctv_layer,       type: "cctv_layer::CctvLayer"}
     - {name: inflation_layer,        type: "costmap_2d::InflationLayer"}

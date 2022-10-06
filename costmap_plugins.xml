@@ -15,7 +15,7 @@
     </class>
   </library>
   <library path="lib/libcctv_layer">
-    <class type="cctv_layer_namespace::CctvLayer" base_class_type="costmap_2d::Layer">
+    <class type="cctv_layer::CctvLayer" base_class_type="costmap_2d::Layer">
       <description>Practical layer what subscribe real YOLO topic</description>
     </class>
   </library>

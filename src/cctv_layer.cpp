@@ -7,31 +7,39 @@ extern std::vector<int> received_point_x;
 extern std::vector<int> received_point_y;
 extern int received_point_msg_seq;
 
-PLUGINLIB_EXPORT_CLASS(cctv_layer_namespace::CctvLayer, costmap_2d::Layer)
+PLUGINLIB_EXPORT_CLASS(cctv_layer::CctvLayer, costmap_2d::Layer);
 
 using costmap_2d::LETHAL_OBSTACLE;
 using costmap_2d::NO_INFORMATION;
 
 
 
-namespace cctv_layer_namespace
+namespace cctv_layer
 {
 
-CctvLayer::CctvLayer() {}
+CctvLayer::CctvLayer() :
+  _dsrv(nullptr)
+{}
 
+CctvLayer::~CctvLayer() 
+{
+    if (_dsrv) {
+        _dsrv = nullptr;
+    }
+}
 
 void CctvLayer::onInitialize()
 {
   ros::NodeHandle nh("~/" + name_);
   current_ = true;
   default_value_ = NO_INFORMATION;
+  lethal_radius = 3.0;
   matchSize();
 
+  _dsrv = std::make_shared<dynamic_reconfigure::Server<CctvLayerConfig>>(nh);
+  dynamic_reconfigure::Server<CctvLayerConfig>::CallbackType cb = boost::bind(&CctvLayer::reconfigureCb, this, _1, _2);
+  _dsrv->setCallback(cb);
 
-  dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
-  dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
-      &CctvLayer::reconfigureCB, this, _1, _2);
-  dsrv_->setCallback(cb);
 }
 
 
@@ -42,10 +50,10 @@ void CctvLayer::matchSize()
             master->getOriginX(), master->getOriginY());
 }
 
-
-void CctvLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
+void CctvLayer::reconfigureCb(CctvLayerConfig &config, uint32_t level)
 {
-  enabled_ = config.enabled;
+    enabled_ = config.enabled;
+    lethal_radius = config.lethal_radius;
 }
 
 void CctvLayer::clearPastcost(std::vector<char> &pastcost)
@@ -64,14 +72,13 @@ void CctvLayer::transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &y
 
 void CctvLayer::makeCircle(int point_x, int point_y,std::vector<int> &circle_x, std::vector<int> &circle_y)
 {
-  int radius = 3;
 
-  // Calculate Circle point
-  for (int i = -radius ; i <= radius ; i++)
+  // Calculate x,y in circle
+  for (int i = -lethal_radius ; i <= lethal_radius ; i++)
   {
-    for(int j = -radius ; j <= radius ; j++)
+    for(int j = -lethal_radius ; j <= lethal_radius ; j++)
     {
-      if(i*i + j*j <= radius*radius)
+      if(i*i + j*j <= lethal_radius*lethal_radius)
       {
         circle_x.push_back(point_x+i);
         circle_y.push_back(point_y+j);

@@ -5,14 +5,16 @@
 #include <costmap_2d/layered_costmap.h>
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
+#include <nav_cctv/CctvLayerConfig.h>
 
-namespace cctv_layer_namespace
+namespace cctv_layer
 {
 
 class CctvLayer : public costmap_2d::Layer, public costmap_2d::Costmap2D
 {
 public:
   CctvLayer();
+  virtual ~CctvLayer();
   int yolo_map_origin_x = 990;
   int yolo_map_origin_y = 1984-855;
   std::vector<int> past_x ;
@@ -30,8 +32,9 @@ public:
   virtual void matchSize();
   
 private:
-  void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
-  dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
+  void reconfigureCb(CctvLayerConfig &config, uint32_t level);
+  std::shared_ptr<dynamic_reconfigure::Server<CctvLayerConfig>> _dsrv;
+  double lethal_radius;
   void clearPastcost(std::vector<char> &pastcost);
   void transformCoordinate(std::vector<int> &yolo_x,std::vector<int> &yolo_y,std::vector<int> &costmap_x,std::vector<int> &costmap_y);
   void makeCircle(int point_x, int point_y,std::vector<int> &circle_x,std::vector<int> &circle_y);
