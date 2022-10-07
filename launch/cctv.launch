@@ -6,7 +6,7 @@
 
   <!-- Navigation stack -->
   <!-- Map Server -->
-  <arg name="map_file" default="/home/capstone/capstone.yaml"/>
+  <arg name="map_file" default="($find nav_cctv)/map/capstone2.yaml"/>
   <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
   
   <!-- Odom-IMU Extended Kalman Filter -->
