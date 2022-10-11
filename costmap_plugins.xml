@@ -1,19 +1,4 @@
 <class_libraries>
-  <library path="lib/libsimple_layer">
-    <class type="simple_layer_namespace::SimpleLayer" base_class_type="costmap_2d::Layer">
-      <description>Demo Layer that adds a point 1 meter in front of the robot</description>
-    </class>
-  </library>
-  <library path="lib/libgrid_layer">
-    <class type="simple_layer_namespace::GridLayer" base_class_type="costmap_2d::Layer">
-      <description>Demo Layer that marks all points that were ever one meter in front of the robot</description>
-    </class>
-  </library>
-  <library path="lib/libdynamic_layer">
-    <class type="simple_layer_namespace::DynamicLayer" base_class_type="costmap_2d::Layer">
-      <description>Demo Layer which is marking dynamic point by subscribed topic</description>
-    </class>
-  </library>
   <library path="lib/libcctv_layer">
     <class type="cctv_layer::CctvLayer" base_class_type="costmap_2d::Layer">
       <description>Practical layer what subscribe real YOLO topic</description>

@@ -62,7 +62,6 @@ int main(int argc, char** argv){
 
 void PointCallback(const nav_cctv::MultiPointConstPtr&Topic_point)
 {
-    //ROS_INFO("Point is %d, seq is %d",Topic_point->location,Topic_point->msg_seq);
     std::vector<int> temp_x;
     std::vector<int> temp_y;
     for(int i =0 ; i<Topic_point->x.size() ; i++)
@@ -72,10 +71,6 @@ void PointCallback(const nav_cctv::MultiPointConstPtr&Topic_point)
     }
     received_point_x = temp_x;
     received_point_y = temp_y;
-    
-    //for(int i =0; i<received_point_x.size();i++)
-    //{
-    //    ROS_INFO("x%d,y%d = %d,%d",i,i,received_point_x[i],received_point_y[i]);
-    //}
+
     received_point_msg_seq = Topic_point->msg_seq;
 }
