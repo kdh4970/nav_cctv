@@ -1,13 +1,27 @@
 global_costmap:
   global_frame: map
   robot_base_frame: base_footprint
-  update_frequency: 4
-  publish_frequency: 4
+  update_frequency: 8.0
+  publish_frequency: 8.0
   always_send_full_costmap: true
+
+  obstacle_layer:
+    enabled: true
+    obstacle_range: 3.0
+    raytrace_range: 3.5
+    observation_sources: scan
+    observation_persistence: 0.0
+    inf_is_valid: false
+    scan:
+      data_type: LaserScan
+      topic: scan
+      marking: true
+      clearing: true
+
   inflation_layer:
     enabled:              true
-    cost_scaling_factor:  3.0  
-    inflation_radius:     0.2
+    cost_scaling_factor:  10.0  
+    inflation_radius:     0.5
   plugins:
     - {name: static_layer,        type: "costmap_2d::StaticLayer"}
     - {name: cctv_layer,       type: "cctv_layer::CctvLayer"}

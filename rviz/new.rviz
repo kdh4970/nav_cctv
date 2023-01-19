@@ -48,7 +48,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 10
-      Reference Frame: <Fixed Frame>
+      Reference Frame: map
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -62,7 +62,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -77,7 +77,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz/Odometry
       Covariance:
@@ -95,8 +95,8 @@ Visualization Manager:
           Scale: 1
           Value: true
         Value: false
-      Enabled: false
-      Keep: 100
+      Enabled: true
+      Keep: 10
       Name: Odometry
       Position Tolerance: 0.10000000149011612
       Shape:
@@ -111,7 +111,7 @@ Visualization Manager:
         Value: Arrow
       Topic: /odom
       Unreliable: false
-      Value: false
+      Value: true
     - Alpha: 0.699999988079071
       Class: rviz/Map
       Color Scheme: map
@@ -136,12 +136,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: false
+      Enabled: true
       Name: local_costmap
       Topic: /move_base/local_costmap/costmap
       Unreliable: false
       Use Timestamp: false
-      Value: false
+      Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 25; 255; 0
@@ -292,11 +292,11 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Alpha: 1
-      Arrow Length: 0.30000001192092896
+      Arrow Length: 0.10000000149011612
       Axes Length: 0.30000001192092896
       Axes Radius: 0.009999999776482582
       Class: rviz/PoseArray
-      Color: 255; 25; 0
+      Color: 0; 255; 0
       Enabled: false
       Head Length: 0.07000000029802322
       Head Radius: 0.029999999329447746
@@ -308,60 +308,19 @@ Visualization Manager:
       Unreliable: false
       Value: false
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        back_rotate_link:
-          Value: false
-        back_wheel_link:
-          Value: false
-        base_footprint:
-          Value: false
-        base_link:
-          Value: false
-        base_scan:
-          Value: false
-        front_rotate_link:
-          Value: false
-        front_wheel_link:
-          Value: false
-        imu_link:
-          Value: false
-        map:
-          Value: true
-        odom:
-          Value: true
-        wheel_left_link:
-          Value: false
-        wheel_right_link:
-          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            base_footprint:
-              base_link:
-                back_rotate_link:
-                  back_wheel_link:
-                    {}
-                base_scan:
-                  {}
-                front_rotate_link:
-                  front_wheel_link:
-                    {}
-                imu_link:
-                  {}
-                wheel_left_link:
-                  {}
-                wheel_right_link:
-                  {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
@@ -390,25 +349,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 13.518171310424805
+      Distance: 13.878422737121582
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.02586808241903782
-        Y: 2.7365825176239014
-        Z: -2.7185115814208984
+        X: 0.8988228440284729
+        Y: 2.350945234298706
+        Z: -2.9320576190948486
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.4797959327697754
+      Pitch: 1.5697963237762451
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.783597469329834
+      Yaw: 4.79859733581543
     Saved: ~
 Window Geometry:
   Displays:

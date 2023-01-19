@@ -15,8 +15,8 @@ class CctvLayer : public costmap_2d::Layer, public costmap_2d::Costmap2D
 public:
   CctvLayer();
   virtual ~CctvLayer();
-  int yolo_map_origin_x = 990;
-  int yolo_map_origin_y = 1984-855;
+  int yolo_map_origin_x = 0;
+  int yolo_map_origin_y = 1984;
   std::vector<int> past_x ;
   std::vector<int> past_y ;
   std::vector<char> pastcost;

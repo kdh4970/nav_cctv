@@ -1,7 +1,7 @@
 GlobalPlanner:
   lethal_cost: 253
   neutral_cost: 66
-  cost_factor: 0.5
+  cost_factor: 2.58
   use_grid_path: False
   use_quadratic: True
   use_dijkstra: True
