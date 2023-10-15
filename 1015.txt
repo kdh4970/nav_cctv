@@ -1,0 +1,21 @@
+cctv_layer_ros : 데스크탑에서 실행하는 yolo 패키지. 
+>> 실행 전 카메라 포트 체크하기.
+>> 카메라 각도 변화가 있거나, 좌표가 안맞는경우 호모그래피에 사용되는 points2d, points3d를 다시 맞춰줄것.
+>> 전역지도 파일 경로: map_2D에 저장.
+>> points3d는 캠 이미지 좌측하단에 바로 나옴.
+>> points2d는 getxy.py로 획득.
+
+
+
+nav_cctv : 모바일로봇에서 실행하는 cctv custom layer 관련 패키지
+>> 아래는 최초 환경 구축시에 할 것,.
+>> 메인은 src/cctv_layer.cpp   , 멀티포인트 퍼블리셔는 테스트 과정에서 만들었던 것.
+>> 사용하는 방법은 두가지.
+	공통사항 : move_base_add안에 있는 파일들을 move_base 패키지의 해당 경로로 복사,교체.
+	1. 그대로 가져다 쓰고, 파라미터 튜닝.
+		그냥 빌드하고 파라미터만 수정해서 실행하면 될것임.
+	2. cctv_layer만 가져다 쓰기.
+		이 경우, cfg,msg,include,src 하위 파일들 본인의 네비 패키지로 복사 및 CMakgelists와 package xml에서 관련 구문 추가.
+
+
+>> cctv_layer : marking radius를 dynamic reconfigure로 만듦. 프로그램 러닝타임에서 마킹반경을 실시간 조절하기 위함.
